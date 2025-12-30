@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoidLight - Keeper's Companion</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app" class="min-h-screen bg-gray-900 text-white">
+    
+    <!-- Campaign Selection Screen -->
+    <div id="campaignSelectScreen" class="campaign-select-screen">
+      <div class="campaign-select-container">
+        <div class="campaign-select-header">
+          <h1 class="title-gradient">VoidLight</h1>
+          <p class="subtitle">Keeper's Companion</p>
+          <p class="tagline">"In the silence between stars, your story begins..."</p>
+        </div>
+        
+        <!-- Main Actions -->
+        <div class="campaign-actions">
+          <button id="newCampaignBtn" class="campaign-action-btn new">
+            <span class="action-icon">✨</span>
+            <span class="action-title">New Campaign</span>
+            <span class="action-desc">Start from a blank template</span>
+          </button>
+          
+          <button id="showTemplatesBtn" class="campaign-action-btn templates">
+            <span class="action-icon">📚</span>
+            <span class="action-title">Browse Campaigns</span>
+            <span class="action-desc">Load templates or import file</span>
+          </button>
+          
+          <button id="showTutorialBtn" class="campaign-action-btn tutorial" style="grid-column: span 2;">
+            <span class="action-icon">❓</span>
+            <span class="action-title">Tutorial</span>
+            <span class="action-desc">Learn how to use the app</span>
+          </button>
+        </div>
+        
+        <!-- Template Browser (hidden by default) -->
+        <div id="templateBrowser" class="template-browser hidden">
+          <h3>📚 Campaign Library</h3>
+          
+          <!-- Import Button -->
+          <div class="import-section">
+            <label class="import-campaign-btn">
+              📂 Import Campaign from File
+              <input type="file" id="loadCampaignInput" accept=".json" class="hidden">
+            </label>
+          </div>
+          
+          <h4 class="template-section-title">Pre-Made Campaign Templates</h4>
+          <div id="templateList" class="template-list">
+            <!-- Templates loaded dynamically -->
+          </div>
+          <button id="closeTemplatesBtn" class="btn btn-gray mt-4">← Back</button>
+        </div>
+        
+        <!-- Tutorial Section (hidden by default) -->
+        <div id="tutorialSection" class="tutorial-section hidden">
+          <h3>❓ How to Use the Keeper's Companion</h3>
+          <div class="tutorial-content custom-scrollbar">
+            <div class="tutorial-chapter">
+              <h4>🎯 Overview</h4>
+              <p>The VoidLight Keeper's Companion is a digital tool to help Keepers manage their tabletop RPG sessions. It tracks characters, clocks, dice rolls, scenes, and more.</p>
+            </div>
+            
+            <div class="tutorial-chapter">
+              <h4>📋 Dashboard</h4>
+              <p>The main hub showing your current scene, active clocks, party status, and pinned NPCs/monsters. Use the "Edit Dashboard" button to choose which characters appear here.</p>
+              <ul>
+                <li><strong>Scene Tracker:</strong> Navigate between scenes and view details like atmosphere, objectives, and keeper tips.</li>
+                <li><strong>Active Clocks:</strong> Visual progress trackers for ongoing events.</li>
+                <li><strong>Spotlight Focus:</strong> Click a character to give them the spotlight (costs Hope for allies, Fear for adversaries).</li>
+                <li><strong>Keeper Moves:</strong> Quick reference for soft, hard, and devastating moves.</li>
+              </ul>
+            </div>
+            
+            <div class="tutorial-chapter">
+              <h4>👥 Characters (Players, NPCs, Monsters)</h4>
+              <p>Each tab lets you manage different character types:</p>
+              <ul>
+                <li><strong>Add Characters:</strong> Click the "+ Add" button to create new characters with stats, abilities, and notes.</li>
+                <li><strong>Stats:</strong> Track HP, Stress, Hope, Armor Slots, and Evasion.</li>
+                <li><strong>Abilities:</strong> Add, edit, or remove abilities with costs (Hope for allies, Fear for adversaries).</li>
+                <li><strong>Pin to Dashboard:</strong> Use the 📌 button to show characters on the dashboard.</li>
+                <li><strong>Ally/Adversary:</strong> Toggle NPCs between ally (uses Hope) and adversary (uses Fear).</li>
+              </ul>
+            </div>
+            
+            <div class="tutorial-chapter">
+              <h4>⏰ Clocks</h4>
+              <p>Clocks are visual countdowns for events, dangers, or progress:</p>
+              <ul>
+                <li>Click segments to fill/unfill them.</li>
+                <li>Create clocks with 4, 6, or 8 segments.</li>
+                <li>Hide clocks from players using the eye icon.</li>
+              </ul>
+            </div>
+            
+            <div class="tutorial-chapter">
+              <h4>🎲 Dice Roller</h4>
+              <p>Roll dice using VoidLight's Duality system:</p>
+              <ul>
+                <li><strong>Duality Roll:</strong> 2d12 + modifier with Hope/Fear outcome.</li>
+                <li><strong>Keeper d20:</strong> Standard d20 for quick checks.</li>
+                <li><strong>Damage Dice:</strong> Roll various damage dice.</li>
+                <li>Results auto-increment Hope or Fear tokens based on outcomes.</li>
+              </ul>
+            </div>
+            
+            <div class="tutorial-chapter">
+              <h4>📖 Scenes</h4>
+              <p>Organize your adventure into scenes:</p>
+              <ul>
+                <li>Click scene numbers to navigate.</li>
+                <li>Expand scenes to see atmosphere, objectives, key rolls, NPCs, outcomes, and tips.</li>
+                <li>Add new scenes or edit existing ones.</li>
+              </ul>
+            </div>
+            
+            <div class="tutorial-chapter">
+              <h4>💾 Saving & Loading</h4>
+              <ul>
+                <li><strong>Save:</strong> Export your campaign to a JSON file.</li>
+                <li><strong>Load:</strong> Import a previously saved campaign.</li>
+                <li><strong>Reset:</strong> Return to default state or start fresh.</li>
+                <li><strong>Templates:</strong> Load pre-made campaign templates.</li>
+              </ul>
+            </div>
+            
+            <div class="tutorial-chapter">
+              <h4>👁 Keeper Mode</h4>
+              <p>Toggle between Keeper and Player views. In Player mode, hidden characters, notes, and keeper-only information are concealed.</p>
+            </div>
+          </div>
+          <button id="closeTutorialBtn" class="btn btn-gray mt-4">← Back</button>
+        </div>
+        
+        <div class="campaign-select-footer">
+          <p>VoidLight: Chronicles of the Stellar Veil</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main App (hidden until campaign loaded) -->
+    <div id="mainApp" class="hidden">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-container">
+          <div class="header-main">
+            <div class="header-title">
+              <h1 class="title-gradient">VoidLight</h1>
+              <p class="subtitle">Keeper's Companion</p>
+            </div>
+
+            <div class="header-controls">
+              <!-- Save/Load Controls -->
+              <div class="save-load-controls">
+                <button id="saveBtn" class="btn btn-save btn-small" title="Save campaign to JSON file">
+                  💾 Save
+                </button>
+                <label class="btn btn-load btn-small">
+                  📂 Load
+                  <input type="file" id="loadInput" accept=".json" class="hidden">
+                </label>
+                <button id="exportBtn" class="btn btn-cyan btn-small" title="Export/Import sections">
+                  📤 Export
+                </button>
+                <button id="resetBtn" class="btn btn-red-dark btn-small" title="Reset to default">
+                  🔄 Reset
+                </button>
+                <button id="exitCampaignBtn" class="btn btn-gray btn-small" title="Return to campaign selection">
+                  🚪 Exit
+                </button>
+              </div>
+
+              <!-- Fear Tokens -->
+              <div class="fear-tokens-container">
+                <span class="fear-label">Fear:</span>
+                <button id="fearMinus" class="btn-token">−</button>
+                <span id="fearCount" class="fear-count">0/12</span>
+                <button id="fearPlus" class="btn-token">+</button>
+              </div>
+
+              <!-- Keeper Mode Toggle -->
+              <button id="keeperModeBtn" class="btn btn-keeper active btn-small">
+                👁 Keeper Mode
+              </button>
+              
+              <!-- Equipment Reference -->
+              <button id="equipmentBtn" class="btn btn-equipment btn-small">
+                ⚔️ Equipment
+              </button>
+            </div>
+          </div>
+
+          <!-- Campaign Name (editable) -->
+          <div class="session-name-container">
+            <input type="text" id="sessionNameInput" class="session-name-input" value="New Campaign"
+              placeholder="Campaign name...">
+          </div>
+
+          <!-- Navigation Tabs -->
+          <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-btn" data-tab="players">Players</button>
+            <button class="tab-btn" data-tab="npcs">NPCs</button>
+            <button class="tab-btn" data-tab="monsters">Monsters</button>
+            <button class="tab-btn" data-tab="scenes">Scenes</button>
+            <button class="tab-btn" data-tab="clocks">Clocks</button>
+            <button class="tab-btn" data-tab="dice">Dice</button>
+            <button class="tab-btn" data-tab="notes">Notes</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Dashboard Tab -->
+        <div id="dashboardTab" class="tab-content active">
+          <!-- Scene Tracker -->
+          <div class="panel">
+            <div class="scene-header">
+              <h3 class="panel-title text-purple">Scene</h3>
+              <div id="sceneButtons" class="scene-buttons"></div>
+            </div>
+            <div id="sceneDetail"></div>
+          </div>
+
+          <!-- Clocks & Dice Roller - 2 Columns -->
+          <div class="two-column-grid">
+            <!-- Active Clocks -->
+            <div class="panel">
+              <h3 class="panel-title text-purple">Active Clocks</h3>
+              <div id="dashboardClocks" class="clocks-grid"></div>
+            </div>
+
+            <!-- Dice Roller -->
+            <div class="panel">
+              <div id="diceRoller"></div>
+            </div>
+          </div>
+
+          <!-- Party Status -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3 class="panel-title text-blue">Party Status</h3>
+              <button id="dashboardSelectorBtn" class="btn btn-small btn-gray">⚙️ Edit Dashboard</button>
+            </div>
+            <div id="partyStatus" class="character-grid"></div>
+          </div>
+
+          <!-- NPCs on Dashboard -->
+          <div id="npcDashboardPanel" class="panel hidden">
+            <h3 class="panel-title text-red">Active NPCs & Enemies</h3>
+            <div id="npcDashboard" class="character-grid"></div>
+          </div>
+
+          <!-- Spotlight Focus & Adversary Abilities (Keeper Only) -->
+          <div class="two-column-grid keeper-only">
+            <!-- Spotlight Focus -->
+            <div class="panel">
+              <h3 class="panel-title text-yellow">🔦 Spotlight Focus</h3>
+              <p class="text-small text-gray mb-2">Players: Free | Allies: 1 Hope | Adversaries: 1 Fear</p>
+              <div id="spotlightDisplay" class="spotlight-display"></div>
+              <div id="spotlightButtons"></div>
+            </div>
+
+            <!-- NPC & Monster Abilities -->
+            <div class="panel">
+              <h3 class="panel-title text-red">⚔️ NPC & Monster Abilities</h3>
+              <div id="abilityTooltip" class="ability-tooltip">
+                <span class="text-gray italic">Hover over an ability to see details</span>
+              </div>
+              <div id="abilityButtons"></div>
+            </div>
+          </div>
+
+          <!-- Keeper Moves Panel -->
+          <div class="panel keeper-only">
+            <h3 class="panel-title text-purple">📋 Keeper Moves</h3>
+            <div class="keeper-moves-grid">
+              <!-- Soft Moves -->
+              <div class="moves-column">
+                <div class="moves-header text-gray">Soft Moves (Free)</div>
+                <div id="softMoves" class="moves-list"></div>
+              </div>
+              <!-- Hard Moves -->
+              <div class="moves-column">
+                <div class="moves-header text-purple">Hard Moves (1-3 Fear)</div>
+                <div id="hardMoves" class="moves-list"></div>
+              </div>
+              <!-- Devastating Moves -->
+              <div class="moves-column">
+                <div class="moves-header text-red">Devastating (4+ Fear)</div>
+                <div id="devastatingMoves" class="moves-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Players Tab -->
+        <div id="playersTab" class="tab-content">
+          <div class="tab-header">
+            <h2>Player Characters</h2>
+            <button id="addPlayerBtn" class="btn btn-blue keeper-only">+ Add Player</button>
+          </div>
+          <div id="playersGrid" class="character-cards-grid"></div>
+        </div>
+
+        <!-- NPCs Tab -->
+        <div id="npcsTab" class="tab-content">
+          <div class="tab-header">
+            <h2>NPCs</h2>
+            <button id="addNpcBtn" class="btn btn-red keeper-only">+ Add NPC</button>
+          </div>
+          <div id="npcsGrid" class="character-cards-grid"></div>
+          <div id="hiddenNpcsInfo" class="hidden-info keeper-only hidden"></div>
+        </div>
+
+        <!-- Monsters Tab -->
+        <div id="monstersTab" class="tab-content">
+          <div class="tab-header">
+            <h2>Monsters & Enemies</h2>
+            <div class="tab-header-actions">
+              <button id="bestiaryBtn" class="btn btn-cyan keeper-only">📖 Bestiary</button>
+              <button id="addMonsterBtn" class="btn btn-green keeper-only">+ Add Monster</button>
+            </div>
+          </div>
+          <div id="monstersGrid" class="character-cards-grid"></div>
+          <div id="hiddenMonstersInfo" class="hidden-info keeper-only hidden"></div>
+        </div>
+
+        <!-- Scenes Tab -->
+        <div id="scenesTab" class="tab-content">
+          <div class="tab-header">
+            <h2>Scenes</h2>
+            <button id="addSceneBtn" class="btn btn-purple keeper-only">+ Add Scene</button>
+          </div>
+          <div id="scenesGrid" class="scenes-grid"></div>
+        </div>
+
+        <!-- Clocks Tab -->
+        <div id="clocksTab" class="tab-content">
+          <div class="tab-header">
+            <h2>Clocks</h2>
+          </div>
+          <div class="add-clock-form keeper-only">
+            <input type="text" id="newClockName" placeholder="Clock name..." class="input">
+            <select id="newClockSegments" class="select">
+              <option value="4">4 segments</option>
+              <option value="6">6 segments</option>
+              <option value="8">8 segments</option>
+            </select>
+            <button id="addClockBtn" class="btn btn-purple">+ Add Clock</button>
+          </div>
+          <div id="clocksGrid" class="clocks-full-grid"></div>
+        </div>
+
+        <!-- Dice Tab -->
+        <div id="diceTab" class="tab-content">
+          <div class="two-column-grid">
+            <div class="panel">
+              <div id="fullDiceRoller"></div>
+            </div>
+            <div class="panel">
+              <h3 class="panel-title">🎲 Quick Reference</h3>
+              <div class="reference-table">
+                <div class="reference-row">
+                  <span class="text-green">Success + Hope</span>
+                  <span>Met DC, Hope > Fear → +1 Hope</span>
+                </div>
+                <div class="reference-row">
+                  <span class="text-purple">Success + Fear</span>
+                  <span>Met DC, Fear > Hope → +1 Fear</span>
+                </div>
+                <div class="reference-row">
+                  <span class="text-cyan">Failure + Hope</span>
+                  <span>Missed DC, Hope > Fear → +1 Hope</span>
+                </div>
+                <div class="reference-row">
+                  <span class="text-red">Failure + Fear</span>
+                  <span>Missed DC, Fear > Hope → +1 Fear</span>
+                </div>
+                <div class="reference-row">
+                  <span class="text-yellow">Critical!</span>
+                  <span>Doubles = Auto-success + bonus</span>
+                </div>
+              </div>
+              <div class="difficulty-scale">
+                <h4 class="text-small text-gray">Difficulty Classes</h4>
+                <div class="difficulty-badges">
+                  <span class="text-green">5 Trivial</span>
+                  <span class="text-cyan">10 Easy</span>
+                  <span class="text-white">15 Standard</span>
+                  <span class="text-orange">20 Hard</span>
+                  <span class="text-red">25 Almost Impossible</span>
+                </div>
+              </div>
+              <div class="text-small text-gray mt-2">
+                <p>Hope max: 10 per character | Fear Tokens max: 12</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes Tab -->
+        <div id="notesTab" class="tab-content">
+          <div class="keeper-only">
+            <h2>Keeper Notes</h2>
+            <textarea id="notesTextarea" class="notes-textarea custom-scrollbar"
+              placeholder="Write your session notes here..."></textarea>
+            <div class="notes-actions">
+              <button id="clearNotesBtn" class="btn btn-red-dark">🗑 Clear</button>
+            </div>
+          </div>
+          <div class="player-only text-center text-gray py-12">
+            Notes are only visible in Keeper Mode
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        VoidLight Keeper's Companion • Chronicles of the Stellar Veil
+      </footer>
+    </div>
+
+    <!-- Dashboard Selector Modal -->
+    <div id="dashboardSelectorModal" class="modal hidden">
+      <div class="modal-content modal-small">
+        <div class="modal-header">
+          <h4>Select Dashboard Characters</h4>
+          <button id="closeDashboardSelector" class="modal-close">✕</button>
+        </div>
+        <div id="dashboardSelectorContent" class="modal-body custom-scrollbar"></div>
+      </div>
+    </div>
+
+    <!-- Add Character Modal -->
+    <div id="addCharModal" class="modal hidden">
+      <div class="modal-content modal-large custom-scrollbar">
+        <div class="modal-header">
+          <h3 id="addCharModalTitle" class="modal-title">Add Character</h3>
+          <button id="closeAddCharModal" class="modal-close">✕</button>
+        </div>
+        <input type="hidden" id="addCharType" value="player">
+        <input type="hidden" id="addCharEditId" value="">
+        <div class="modal-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="label">Name *</label>
+              <input type="text" id="addCharName" class="input" placeholder="Character name">
+            </div>
+            <div class="form-group">
+              <label class="label">Subtitle</label>
+              <input type="text" id="addCharSubtitle" class="input" placeholder="Role or species">
+            </div>
+          </div>
+          <div class="form-row form-row-4">
+            <div class="form-group">
+              <label class="label">Max HP</label>
+              <input type="number" id="addCharHp" class="input" value="7" min="1">
+            </div>
+            <div class="form-group">
+              <label class="label">Max Stress</label>
+              <input type="number" id="addCharMaxStress" class="input" value="6" min="1">
+            </div>
+            <div class="form-group">
+              <label class="label">Evasion</label>
+              <input type="number" id="addCharEvasion" class="input" value="10" min="1">
+            </div>
+            <div class="form-group">
+              <label class="label">Armor</label>
+              <input type="number" id="addCharArmor" class="input" value="3" min="0">
+            </div>
+          </div>
+          <div class="form-row form-row-4">
+            <div class="form-group">
+              <label class="label">Minor Threshold</label>
+              <input type="number" id="addCharMinor" class="input" value="5" min="1">
+            </div>
+            <div class="form-group">
+              <label class="label">Severe Threshold</label>
+              <input type="number" id="addCharSevere" class="input" value="10" min="1">
+            </div>
+            <div class="form-group">
+              <label class="label">Armor Slots</label>
+              <input type="number" id="addCharArmorSlots" class="input" value="3" min="0" max="10">
+            </div>
+            <div class="form-group" id="allyCheckboxContainer">
+              <label class="label">Ally?</label>
+              <label class="checkbox-label mt-2">
+                <input type="checkbox" id="addCharIsAlly">
+                <span>Is Ally</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="label">Description</label>
+            <textarea id="addCharDescription" class="textarea" placeholder="Character description..."></textarea>
+          </div>
+          
+          <!-- Abilities Editor (for NPCs and Monsters) -->
+          <div id="abilitiesEditorContainer" class="abilities-editor hidden">
+            <div class="abilities-editor-header">
+              <span class="abilities-editor-title">⚔️ Abilities</span>
+              <span id="costTypeIndicator" class="cost-type-label">(Cost: Fear)</span>
+            </div>
+            <div id="abilitiesList" class="abilities-list custom-scrollbar">
+              <div class="no-abilities">No abilities added yet</div>
+            </div>
+            <div class="add-ability-row">
+              <input type="text" id="newAbilityName" placeholder="Ability name">
+              <select id="newAbilityType" class="type-select">
+                <option value="Action">Action</option>
+                <option value="Reaction">Reaction</option>
+                <option value="Passive">Passive</option>
+              </select>
+              <input type="number" id="newAbilityCost" class="cost-input" placeholder="Cost" min="0" max="10" value="0">
+              <span id="costTypeLabel" class="cost-type-label">Fear</span>
+              <input type="text" id="newAbilityDesc" placeholder="Description">
+              <button type="button" onclick="addModalAbility()">+ Add</button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="label">Keeper Notes</label>
+            <textarea id="addCharKeeperNotes" class="textarea-small"
+              placeholder="Notes only visible to keeper..."></textarea>
+          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" id="addCharHidden">
+            <span>Hidden from players (Keeper Only)</span>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button id="confirmAddChar" class="btn btn-purple flex-1">Add Character</button>
+          <button id="cancelAddChar" class="btn btn-gray flex-1">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Scene Modal -->
+    <div id="addSceneModal" class="modal hidden">
+      <div class="modal-content modal-large custom-scrollbar">
+        <div class="modal-header">
+          <h3 id="addSceneModalTitle" class="modal-title">Add Scene</h3>
+          <button id="closeAddSceneModal" class="modal-close">✕</button>
+        </div>
+        <input type="hidden" id="editSceneId" value="">
+        <div class="modal-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="label">Scene Name *</label>
+              <input type="text" id="addSceneName" class="input" placeholder="e.g., The Approach">
+            </div>
+            <div class="form-group">
+              <label class="label">Location</label>
+              <input type="text" id="addSceneLocation" class="input" placeholder="e.g., Asteroid Field">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="label">Keeper Notes</label>
+            <textarea id="addSceneNotes" class="textarea" placeholder="Brief notes for this scene..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label">Atmosphere (read-aloud text)</label>
+            <textarea id="addSceneAtmosphere" class="textarea" placeholder="Descriptive text to read to players..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label">Objectives (one per line)</label>
+            <textarea id="addSceneObjectives" class="textarea-small" placeholder="Investigate the ship&#10;Find survivors&#10;Secure the cargo"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label">Key Rolls (one per line)</label>
+            <textarea id="addSceneKeyRolls" class="textarea-small" placeholder="Knowledge + Tech (DC 14) to scan&#10;Presence + Persuasion (DC 12) to calm"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label">NPCs Present (comma-separated)</label>
+            <input type="text" id="addSceneNpcs" class="input" placeholder="Captain Rodriguez, Lisa Park">
+          </div>
+          <div class="form-group">
+            <label class="label">Possible Outcomes (one per line)</label>
+            <textarea id="addSceneOutcomes" class="textarea-small" placeholder="Success: Players gain trust&#10;Failure: Combat ensues"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="label">Keeper Tips</label>
+            <textarea id="addSceneTips" class="textarea-small" placeholder="Tips for running this scene..."></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button id="confirmAddScene" class="btn btn-purple flex-1">Save Scene</button>
+          <button id="cancelAddScene" class="btn btn-gray flex-1">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="resetModal" class="modal hidden">
+      <div class="modal-content modal-small">
+        <div class="modal-header">
+          <h4>Reset Campaign</h4>
+          <button id="closeResetModal" class="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="text-gray mb-4">Choose a reset option:</p>
+          <div class="reset-options">
+            <button id="resetToDefaultBtn" class="btn btn-purple full-width mb-2">
+              🔄 Reset to Template Default
+            </button>
+            <button id="resetToBlankBtn" class="btn btn-gray full-width mb-2">
+              📄 Reset to Blank Campaign
+            </button>
+            <button id="cancelResetBtn" class="btn btn-red-dark full-width">
+              ✕ Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene Editor Modal -->
+    <div id="sceneModal" class="modal hidden">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h4 id="sceneModalTitle">Add New Scene</h4>
+          <button onclick="hideSceneModal()" class="modal-close">✕</button>
+        </div>
+        <input type="hidden" id="sceneModalMode" value="add">
+        <input type="hidden" id="sceneEditId" value="">
+        <div class="modal-body custom-scrollbar" style="max-height: 70vh; overflow-y: auto;">
+          <div class="form-group">
+            <label>Scene Name *</label>
+            <input type="text" id="sceneNameInput" class="form-input" placeholder="Scene 1: The Beginning">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" id="sceneLocationInput" class="form-input" placeholder="Space Station Alpha">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Keeper Notes</label>
+            <textarea id="sceneNotesInput" class="form-textarea" rows="2" placeholder="Quick notes for the Keeper"></textarea>
+          </div>
+          
+          <h5 class="mt-4 mb-2">🌍 Environment (Optional)</h5>
+          <p class="text-gray text-small mb-2">Layer a Macro and Micro environment to create depth. Select ONE feature from the Macro as your active modifier.</p>
+          
+          <div class="env-layer-config">
+            <div class="env-layer-header macro">MACRO ENVIRONMENT (Planet/Biome)</div>
+            <div class="form-row">
+              <div class="form-group" style="flex: 2;">
+                <label>Environment</label>
+                <select id="sceneMacroEnv" class="form-select" onchange="updateMacroTierOptions()">
+                  <option value="">-- None --</option>
+                  <option value="ecumenopolis">Ecumenopolis (Core World)</option>
+                  <option value="death_world">Death World (Toxic)</option>
+                  <option value="ice_world">Ice World (Frozen)</option>
+                  <option value="volcanic_world">Volcanic World (Magma)</option>
+                  <option value="dead_world">Dead World (Necropolis)</option>
+                  <option value="jungle_world">Jungle World (Overgrown)</option>
+                  <option value="deep_space">Deep Space (Void)</option>
+                  <option value="veil_pocket">Veil Pocket (Dreamscape)</option>
+                  <option value="crystalline">Crystalline World (Geode)</option>
+                  <option value="megastructure">Artificial World (Megastructure)</option>
+                  <option value="cyber_city">Cyber-City (Synthetic)</option>
+                  <option value="desert_world">Desert World (Barren)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label>Tier</label>
+                <select id="sceneMacroTier" class="form-select" onchange="updateMacroDifficulty()">
+                  <option value="">--</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 0.5;">
+                <label>DC</label>
+                <input type="text" id="sceneMacroDC" class="input" readonly value="--">
+              </div>
+            </div>
+            <div id="sceneMacroTierDesc" class="tier-desc hidden"></div>
+          </div>
+          
+          <div class="env-layer-config">
+            <div class="env-layer-header micro">MICRO ENVIRONMENT (Location)</div>
+            <div class="form-row">
+              <div class="form-group" style="flex: 2;">
+                <label>Environment</label>
+                <select id="sceneMicroEnv" class="form-select" onchange="updateMicroTierOptions()">
+                  <option value="">-- None --</option>
+                  <option value="bazaar">Marketplace / Bazaar</option>
+                  <option value="noble_estate">Noble Estate / Penthouse</option>
+                  <option value="cantina">Cantina / Nightclub</option>
+                  <option value="factory">Factory Floor</option>
+                  <option value="derelict">Derelict Ship</option>
+                  <option value="prison">Prison Complex</option>
+                  <option value="bunker">Military Bunker</option>
+                  <option value="medical_bay">Medical Bay / Hospital</option>
+                  <option value="gambling_den">Gambling Den / Casino</option>
+                  <option value="cargo_hold">Cargo Hold / Warehouse</option>
+                  <option value="engine_room">Engine Room / Reactor</option>
+                  <option value="hangar_bay">Hangar Bay / Docking</option>
+                  <option value="bridge">Bridge / Command Center</option>
+                  <option value="transit_hub">Transit Hub / Spaceport</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label>Tier</label>
+                <select id="sceneMicroTier" class="form-select" onchange="updateMicroDifficulty()">
+                  <option value="">--</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 0.5;">
+                <label>DC</label>
+                <input type="text" id="sceneMicroDC" class="input" readonly value="--">
+              </div>
+            </div>
+            <div id="sceneMicroTierDesc" class="tier-desc hidden"></div>
+          </div>
+          <div class="form-group">
+            <label>Active Environment Modifier (from Macro)</label>
+            <input type="text" id="sceneEnvModifier" class="form-input" placeholder="e.g., Hostile Atmosphere: 1 Stress/min without suits">
+          </div>
+          
+          <h5 class="mt-4 mb-2">📋 Scene Details</h5>
+          <div class="form-group">
+            <label>Atmosphere</label>
+            <textarea id="sceneAtmosphereInput" class="form-textarea" rows="2" placeholder="Describe the sensory details..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Objectives (one per line)</label>
+            <textarea id="sceneObjectivesInput" class="form-textarea" rows="3" placeholder="Find the artifact&#10;Escape the guards&#10;Negotiate with the merchant"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Key Rolls (one per line)</label>
+            <textarea id="sceneKeyRollsInput" class="form-textarea" rows="3" placeholder="Knowledge + Tech DC 14&#10;Presence + Persuasion DC 12"></textarea>
+          </div>
+          <div class="form-group">
+            <label>NPCs Present (one per line)</label>
+            <textarea id="sceneNpcsPresentInput" class="form-textarea" rows="2" placeholder="Captain Rodriguez&#10;The Mysterious Stranger"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Possible Outcomes (one per line)</label>
+            <textarea id="sceneOutcomesInput" class="form-textarea" rows="3" placeholder="Success: The crew escapes&#10;Failure: Alarm is raised"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Keeper Tips</label>
+            <textarea id="sceneTipsInput" class="form-textarea" rows="2" placeholder="Remember to..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button onclick="hideSceneModal()" class="btn btn-gray">Cancel</button>
+          <button onclick="saveScene()" class="btn btn-purple">💾 Save Scene</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export/Import Modal -->
+    <div id="exportModal" class="modal hidden">
+      <div class="modal-content modal-medium">
+        <div class="modal-header">
+          <h4>📤 Export / Import Sections</h4>
+          <button onclick="hideExportModal()" class="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+          <h5 class="mb-3">Export Individual Sections</h5>
+          <div class="export-buttons">
+            <button onclick="exportSection('players')" class="btn btn-blue full-width mb-2">👥 Export Players</button>
+            <button onclick="exportSection('npcs')" class="btn btn-cyan full-width mb-2">🎭 Export NPCs</button>
+            <button onclick="exportSection('monsters')" class="btn btn-red full-width mb-2">👹 Export Monsters</button>
+            <button onclick="exportSection('scenes')" class="btn btn-yellow full-width mb-2">🎬 Export Scenes</button>
+            <button onclick="exportSection('clocks')" class="btn btn-purple full-width mb-2">⏰ Export Clocks</button>
+            <button onclick="exportSection('all')" class="btn btn-green full-width mb-2">💾 Export Full Campaign</button>
+          </div>
+          
+          <h5 class="mt-4 mb-3">Import Section or Campaign</h5>
+          <p class="text-gray text-small mb-2">Import a previously exported section file or a full campaign file.</p>
+          <label class="btn btn-gray full-width">
+            📂 Choose File to Import
+            <input type="file" id="sectionImportInput" accept=".json" class="hidden" onchange="importSection(event)">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monster Bestiary Modal -->
+    <div id="bestiaryModal" class="modal hidden">
+      <div class="modal-content modal-full">
+        <div class="modal-header">
+          <h4>📖 Galactic Bestiary</h4>
+          <button onclick="hideBestiaryModal()" class="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="bestiary-actions mb-4">
+            <button onclick="loadAllBestiaryMonsters()" class="btn btn-purple">📚 Add All Monsters (Hidden)</button>
+            <p class="text-gray text-small mt-1">Adds all monsters from the core rules to your campaign, hidden by default.</p>
+          </div>
+          <div id="bestiaryContent" class="bestiary-content custom-scrollbar">
+            <!-- Populated by renderBestiary() -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment Reference Modal -->
+    <div id="equipmentModal" class="modal hidden">
+      <div class="modal-content modal-full equipment-modal">
+        <div class="modal-header">
+          <h4>⚔️ Equipment Reference</h4>
+          <div class="equipment-search-container">
+            <input type="text" id="equipmentSearch" class="input equipment-search" placeholder="🔍 Search weapons, armor, augmentations..." oninput="filterEquipment()">
+          </div>
+          <button onclick="hideEquipmentModal()" class="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+          <!-- Equipment Category Tabs -->
+          <div class="equipment-tabs">
+            <button class="equip-tab active" data-category="weapons" onclick="switchEquipmentTab('weapons')">⚔️ Weapons</button>
+            <button class="equip-tab" data-category="armor" onclick="switchEquipmentTab('armor')">🛡️ Armor</button>
+            <button class="equip-tab" data-category="augmentations" onclick="switchEquipmentTab('augmentations')">🦾 Augmentations</button>
+            <button class="equip-tab" data-category="features" onclick="switchEquipmentTab('features')">📜 Features Glossary</button>
+          </div>
+          
+          <!-- Equipment Content -->
+          <div id="equipmentContent" class="equipment-content custom-scrollbar">
+            <!-- Populated by renderEquipment() -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
